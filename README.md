@@ -119,3 +119,93 @@ Krini is a digital platform that acts as a bridge between customers who want to 
 - Ratings and reviews module.
 - Detailed analytics for agency dashboards.
 - Comprehensive admin panel.
+
+---
+
+## Backend API
+
+The repository now contains an Express.js backend that powers the Krini platform. The API follows an MVC-inspired folder structure with dedicated folders for models, controllers, routes, and middlewares.
+
+### Prerequisites
+
+- Node.js 18+
+- MongoDB instance (local or hosted)
+
+### Environment Variables
+
+Copy the provided `.env.example` and update it with your local credentials:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Description |
+| --- | --- |
+| `PORT` | Port used by the HTTP server (defaults to `5000`). |
+| `MONGODB_URI` | Mongo connection string. |
+| `JWT_SECRET` | Secret used to sign JSON Web Tokens. |
+| `NODE_ENV` | Node environment (e.g., `development`, `production`). |
+
+### Step-by-Step: Run the Backend Locally
+
+1. **Clone the repository** (skip if you already have the sources locally):
+   ```bash
+   git clone https://github.com/<your-account>/Kryni.git
+   cd Kryni
+   ```
+
+2. **Install Node.js dependencies**:
+   ```bash
+   npm install
+   ```
+   > If your corporate network blocks npmjs.org you may need to configure a proxy first (`npm config set proxy http://proxy:port`).
+
+3. **Provide environment variables** by creating a `.env` file based on the example and filling in the values for your setup:
+   ```bash
+   cp .env.example .env
+   # then edit .env with your editor of choice
+   ```
+
+4. **Start a MongoDB instance**. You can either run MongoDB locally or use Docker:
+   ```bash
+   # Local installation
+   mongod --dbpath <path-to-data-directory>
+
+   # – or – Docker (requires Docker Desktop / Docker Engine)
+   docker run --name krini-mongo -p 27017:27017 -d mongo:6
+   ```
+   Update `MONGODB_URI` in `.env` so the backend can connect (e.g. `mongodb://127.0.0.1:27017/krini`).
+
+5. **Launch the development server** with Nodemon hot reload:
+   ```bash
+   npm run dev
+   ```
+   The API listens on `http://localhost:5000` by default (configurable via `PORT`).
+
+6. **Verify the API is running** by hitting the default health check route:
+   ```bash
+   curl http://localhost:5000/
+   ```
+   You should receive a JSON response confirming the server status (e.g. `{ "message": "Krini API is running" }`).
+
+### Available Scripts
+
+- `npm run dev` – start the API with hot reloading using Nodemon.
+- `npm start` – run the server once with Node (used for production deployments).
+
+### Key Endpoints
+
+| Method & Path | Description |
+| --- | --- |
+| `POST /auth/register` | Register a customer or agency account. Agencies require admin validation. |
+| `POST /auth/login` | Authenticate an existing user and receive a JWT. |
+| `GET /cars` | Search for cars with query filters (city, price, type, dates). |
+| `POST /cars` | Agency-only endpoint to create a new car listing. |
+| `PUT /cars/:id` | Agency-only endpoint to update an owned car. |
+| `DELETE /cars/:id` | Agency-only endpoint to remove an owned car. |
+| `POST /reservations` | Customers create a reservation for a car. |
+| `GET /reservations/user/:id` | Fetch reservation history for a user (self or admin). |
+| `PUT /reservations/:id/status` | Admin or owning agency update reservation status. |
+| `POST /reviews` | Customers submit reviews for completed reservations. |
+
+The API responds with JSON payloads and standard HTTP status codes. Authentication-protected routes expect a bearer token provided via the `Authorization` header.
