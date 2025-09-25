@@ -119,3 +119,60 @@ Krini is a digital platform that acts as a bridge between customers who want to 
 - Ratings and reviews module.
 - Detailed analytics for agency dashboards.
 - Comprehensive admin panel.
+
+---
+
+## Backend API
+
+The repository now contains an Express.js backend that powers the Krini platform. The API follows an MVC-inspired folder structure with dedicated folders for models, controllers, routes, and middlewares.
+
+### Prerequisites
+
+- Node.js 18+
+- MongoDB instance (local or hosted)
+
+### Environment Variables
+
+Copy the provided `.env.example` and update it with your local credentials:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Description |
+| --- | --- |
+| `PORT` | Port used by the HTTP server (defaults to `5000`). |
+| `MONGODB_URI` | Mongo connection string. |
+| `JWT_SECRET` | Secret used to sign JSON Web Tokens. |
+| `NODE_ENV` | Node environment (e.g., `development`, `production`). |
+
+### Install & Run
+
+```bash
+npm install
+npm run dev
+```
+
+> ℹ️ If you are behind a network proxy, ensure your npm registry configuration allows downloading open-source packages such as Express, Mongoose, and bcryptjs.
+
+### Available Scripts
+
+- `npm run dev` – start the API with hot reloading using Nodemon.
+- `npm start` – run the API in production mode.
+
+### Key Endpoints
+
+| Method & Path | Description |
+| --- | --- |
+| `POST /auth/register` | Register a customer or agency account. Agencies require admin validation. |
+| `POST /auth/login` | Authenticate an existing user and receive a JWT. |
+| `GET /cars` | Search for cars with query filters (city, price, type, dates). |
+| `POST /cars` | Agency-only endpoint to create a new car listing. |
+| `PUT /cars/:id` | Agency-only endpoint to update an owned car. |
+| `DELETE /cars/:id` | Agency-only endpoint to remove an owned car. |
+| `POST /reservations` | Customers create a reservation for a car. |
+| `GET /reservations/user/:id` | Fetch reservation history for a user (self or admin). |
+| `PUT /reservations/:id/status` | Admin or owning agency update reservation status. |
+| `POST /reviews` | Customers submit reviews for completed reservations. |
+
+The API responds with JSON payloads and standard HTTP status codes. Authentication-protected routes expect a bearer token provided via the `Authorization` header.
