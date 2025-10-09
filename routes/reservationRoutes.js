@@ -4,6 +4,7 @@ import {
   createReservation,
   getUserReservations,
   updateReservationStatus,
+  cancelReservation,
 } from '../controllers/reservationController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { isCustomer, authorizeRoles } from '../middlewares/roleMiddleware.js';
@@ -31,5 +32,7 @@ router.put(
   [body('status').notEmpty().withMessage('Status is required')],
   updateReservationStatus
 );
+
+router.patch('/:id/cancel', authenticate, isCustomer, cancelReservation);
 
 export default router;
