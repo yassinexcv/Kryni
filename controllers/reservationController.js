@@ -111,3 +111,36 @@ export const updateReservationStatus = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const cancelReservation = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const reservation = await Reservation.findById(id).populate('car');
+
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+
+    if (reservation.customer.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to cancel this reservation' });
+    }
+
+    if (['cancelled', 'completed'].includes(reservation.status)) {
+      return res.status(400).json({ message: 'Reservation cannot be cancelled' });
+    }
+
+    if (new Date(reservation.startDate) <= new Date()) {
+      return res
+        .status(400)
+        .json({ message: 'Cannot cancel a reservation that has already started' });
+    }
+
+    reservation.status = 'cancelled';
+    await reservation.save();
+
+    return res.json(reservation);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
