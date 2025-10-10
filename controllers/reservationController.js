@@ -194,6 +194,7 @@ export const cancelReservation = async (req, res) => {
     const now = new Date();
 
     if (new Date(reservation.startDate) <= now) {
+    if (new Date(reservation.startDate) <= new Date()) {
       return res
         .status(400)
         .json({ message: 'Cannot cancel a reservation that has already started' });
@@ -223,6 +224,10 @@ export const cancelReservation = async (req, res) => {
       message: 'Cancellation request submitted and awaiting admin approval',
       reservation,
     });
+    reservation.status = 'cancelled';
+    await reservation.save();
+
+    return res.json(reservation);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
