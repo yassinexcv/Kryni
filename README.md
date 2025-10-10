@@ -187,11 +187,20 @@ cp .env.example .env
    curl http://localhost:5000/
    ```
    You should receive a JSON response confirming the server status (e.g. `{ "message": "Krini API is running" }`).
+### Install & Run
+
+```bash
+npm install
+npm run dev
+```
+
+> ℹ️ If you are behind a network proxy, ensure your npm registry configuration allows downloading open-source packages such as Express, Mongoose, and bcryptjs.
 
 ### Available Scripts
 
 - `npm run dev` – start the API with hot reloading using Nodemon.
 - `npm start` – run the server once with Node (used for production deployments).
+- `npm start` – run the API in production mode.
 
 ### Key Endpoints
 
