@@ -146,6 +146,47 @@ cp .env.example .env
 | `JWT_SECRET` | Secret used to sign JSON Web Tokens. |
 | `NODE_ENV` | Node environment (e.g., `development`, `production`). |
 
+### Step-by-Step: Run the Backend Locally
+
+1. **Clone the repository** (skip if you already have the sources locally):
+   ```bash
+   git clone https://github.com/<your-account>/Kryni.git
+   cd Kryni
+   ```
+
+2. **Install Node.js dependencies**:
+   ```bash
+   npm install
+   ```
+   > If your corporate network blocks npmjs.org you may need to configure a proxy first (`npm config set proxy http://proxy:port`).
+
+3. **Provide environment variables** by creating a `.env` file based on the example and filling in the values for your setup:
+   ```bash
+   cp .env.example .env
+   # then edit .env with your editor of choice
+   ```
+
+4. **Start a MongoDB instance**. You can either run MongoDB locally or use Docker:
+   ```bash
+   # Local installation
+   mongod --dbpath <path-to-data-directory>
+
+   # – or – Docker (requires Docker Desktop / Docker Engine)
+   docker run --name krini-mongo -p 27017:27017 -d mongo:6
+   ```
+   Update `MONGODB_URI` in `.env` so the backend can connect (e.g. `mongodb://127.0.0.1:27017/krini`).
+
+5. **Launch the development server** with Nodemon hot reload:
+   ```bash
+   npm run dev
+   ```
+   The API listens on `http://localhost:5000` by default (configurable via `PORT`).
+
+6. **Verify the API is running** by hitting the default health check route:
+   ```bash
+   curl http://localhost:5000/
+   ```
+   You should receive a JSON response confirming the server status (e.g. `{ "message": "Krini API is running" }`).
 ### Install & Run
 
 ```bash
@@ -158,6 +199,7 @@ npm run dev
 ### Available Scripts
 
 - `npm run dev` – start the API with hot reloading using Nodemon.
+- `npm start` – run the server once with Node (used for production deployments).
 - `npm start` – run the API in production mode.
 
 ### Key Endpoints

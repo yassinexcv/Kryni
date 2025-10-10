@@ -103,6 +103,7 @@ export const updateReservationStatus = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to update reservation status' });
     }
 
+    reservation.status = status;
     if (status === 'cancelled') {
       if (req.user.role !== 'admin') {
         return res
