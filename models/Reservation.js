@@ -32,6 +32,27 @@ const reservationSchema = new Schema(
       enum: ['pending', 'confirmed', 'completed', 'cancelled'],
       default: 'pending',
     },
+    cancellation: {
+      status: {
+        type: String,
+        enum: ['none', 'pending', 'approved', 'rejected'],
+        default: 'none',
+      },
+      requestedAt: Date,
+      approvedAt: Date,
+      approvedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      refundEligible: {
+        type: Boolean,
+        default: true,
+      },
+      fraudSuspected: {
+        type: Boolean,
+        default: false,
+      },
+    },
   },
   { timestamps: true }
 );
